@@ -3,18 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive Frequency Response Chart</title>
+  <title>Interactive Frequency Response</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-  <h1>Frequency Response Chart</h1>
   
-  <!-- Responsive Chart Container -->
-  <div class="chart-container">
-    <canvas id="frequencyChart"></canvas>
-  </div>
-
-  <script>
     // Step 1: Load CSV Data
     async function loadCSV(file) {
       const response = await fetch(file);
@@ -59,34 +50,22 @@
               type: 'logarithmic',
               title: {
                 display: true,
-                text: 'Frequency (Hz)',
-                color: 'white'
+                text: 'Frequency (Hz)'
               },
               min: 20,
               max: 20000,
               ticks: {
-                callback: value => `${value} Hz`,
-                color: 'white'
-              },
-              grid: {
-                color: 'rgba(64, 64, 64, 1)' /* Subtle gridlines for readability */
+                callback: value => `${value} Hz`
               }
             },
             y: {
               title: {
                 display: true,
-                text: 'Amplitude (dB)',
-                color: 'white'
+                text: 'Amplitude (dB)'
               },
               min: -20,
               max: 20,
-              ticks: {
-                stepSize: 5,
-                color: 'white'
-              },
-              grid: {
-                color: 'rgba(64, 64, 64, 1)' /* Subtle gridlines for readability */
-              }
+              ticks: { stepSize: 5 }
             }
           }
         }
