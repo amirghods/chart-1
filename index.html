@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Frequency Response</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Frequency Response Chart (Data from CSV)</h1>
+    <canvas id="frequencyChart" width="800" height="400"></canvas>
+    <script>
+        // Step 1: Define a function to load CSV data
+        async function loadCSV(file) {
+            const response = await fetch(file);
+            const text = await response.text();
+            const rows = text.split("\n").slice(1); // Skip the header row
+            const dataPoints = rows
+                .filter(row => row.trim() !== "") // Filter out empty rows
+                .map(row => {
+                    const [frequency, dB] = row.split(",").map(value => parseFloat(value.trim()));
+                    return { x: frequency, y: dB };
+                });
+            return dataPoints;
+        }
+
+        // Step 2: Initialize the chart with data from the CSV file
+        async function initializeChart() {
+            const csvFile = 'frequency_dB_data_full.csv'; // Path to your CSV file
+            const dataPoints = await loadCSV(csvFile); // Load data from CSV
+
+            const configFrequencyResponse = {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Frequency Response',
+                        data: dataPoints, // Use data from CSV
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                        pointRadius: 0,
+                        tension: 0.4 // Smooth line
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            type: 'logarithmic',
+                            title: {
+                                display: true,
+                                text: 'Frequency (Hz)'
+                            },
+                            min: 20,
+                            max: 20000,
+                            ticks: {
+                                callback: (value) => `${value} Hz`
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Amplitude (dB)'
+                            },
+                            min: -20,
+                            max: 20,
+                            ticks: {
+                                stepSize: 5
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Render the chart
+            const ctx = document.getElementById('frequencyChart').getContext('2d');
+            new Chart(ctx, configFrequencyResponse);
+        }
+
+        // Step 3: Call the function to initialize the chart
+        initializeChart();
+    </script>
+</body>
+</html>
