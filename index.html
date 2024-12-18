@@ -5,56 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Responsive Frequency Response Chart</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    /* General Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #1a1a1a;
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
-
-    h1 {
-      font-size: 1.5em;
-      margin-bottom: 20px;
-    }
-
-    /* Chart Container */
-    .chart-container {
-      position: relative;
-      width: 100%; /* Full width on all devices */
-      max-width: 900px; /* Maximum width for larger screens */
-      margin: 0 auto; /* Center the chart */
-      height: calc(100vw * 0.5); /* Dynamic height proportional to viewport width */
-      background-color: #262626; /* Dark background for contrast */
-      border-radius: 8px;
-      padding: 10px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    /* Media Queries for Fine-Tuning */
-    @media screen and (max-width: 768px) {
-      .chart-container {
-        height: calc(100vw * 0.7); /* Taller chart on smaller screens */
-      }
-      h1 {
-        font-size: 1.2em;
-      }
-    }
-
-    @media screen and (orientation: landscape) and (max-height: 480px) {
-      .chart-container {
-        height: 50vh; /* Adapt height for landscape mode */
-      }
-    }
-  </style>
 </head>
 <body>
   <h1>Frequency Response Chart</h1>
