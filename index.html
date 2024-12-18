@@ -16,7 +16,6 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      padding: 5px;
     }
 
     h1 {
@@ -30,13 +29,13 @@
       width: 100%; /* Full width on all devices */
       max-width: 800px; /* Maximum width for large screens */
       margin: 0 auto; /* Center the chart */
-      height: calc(300vw * 0.6); /* Dynamic height proportional to viewport width */
+      height: calc(100vw * 0.6); /* Dynamic height proportional to viewport width */
     }
 
     /* Media Queries for Fine-Tuning */
     @media screen and (max-width: 768px) {
       .chart-container {
-        height: calc(200vw * 0.8); /* Slightly taller chart on mobile */
+        height: calc(300vw * 0.6); /* Slightly taller chart on mobile */
       }
       h1 {
         font-size: 1.2em;
@@ -45,7 +44,7 @@
 
     @media screen and (orientation: landscape) and (max-height: 480px) {
       .chart-container {
-        height: 100vh; /* Adapt height for landscape orientation */
+        height: 300vh; /* Adapt height for landscape orientation */
       }
     }
   </style>
