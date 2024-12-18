@@ -3,9 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Frequency Response</title>
+  <title>Responsive Frequency Response Chart</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1 style="text-align: center; font-family: Arial, sans-serif; margin-bottom: 20px; color: #333;">Frequency Response Chart</h1>
   
+  <!-- Chart Container -->
+  <div id="chart-container" style="position: relative; width: 100%; max-width: 800px; margin: 0 auto;">
+    <canvas id="frequencyChart"></canvas>
+  </div>
+
+  <script>
     // Step 1: Load CSV Data
     async function loadCSV(file) {
       const response = await fetch(file);
@@ -21,12 +30,13 @@
       return dataPoints;
     }
 
-    // Step 2: Initialize Chart
-    async function initializeChart() {
+    // Step 2: Create the Chart
+    async function createChart() {
       const csvFile = 'frequency_dB_data_full.csv'; // Path to your CSV file
       const dataPoints = await loadCSV(csvFile);
 
-      const config = {
+      const ctx = document.getElementById('frequencyChart').getContext('2d');
+      const chart = new Chart(ctx, {
         type: 'line',
         data: {
           datasets: [{
@@ -41,7 +51,7 @@
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false, /* Allows the chart to adapt dynamically */
+          maintainAspectRatio: false, // Allow the chart to resize dynamically
           plugins: {
             legend: { display: true }
           },
@@ -65,18 +75,36 @@
               },
               min: -20,
               max: 20,
-              ticks: { stepSize: 5 }
+              ticks: {
+                stepSize: 5
+              }
             }
           }
         }
-      };
+      });
 
-      const ctx = document.getElementById('frequencyChart').getContext('2d');
-      new Chart(ctx, config);
+      // Step 3: Resize Logic for Responsiveness
+      function resizeChart() {
+        const chartContainer = document.getElementById('chart-container');
+        const viewportWidth = window.innerWidth;
+
+        if (viewportWidth <= 768) {
+          chartContainer.style.height = '400px'; // Adjust for tablets and small screens
+        } else if (viewportWidth <= 480) {
+          chartContainer.style.height = '300px'; // Adjust for mobile screens
+        } else {
+          chartContainer.style.height = '500px'; // Default height for larger screens
+        }
+        chart.resize(); // Resize the chart
+      }
+
+      // Listen for window resize events
+      window.addEventListener('resize', resizeChart);
+      resizeChart(); // Initial resize call
     }
 
-    // Step 3: Render the Chart
-    initializeChart();
+    // Step 4: Initialize Chart
+    createChart();
   </script>
 </body>
 </html>
