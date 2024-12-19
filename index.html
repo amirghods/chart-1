@@ -32,22 +32,37 @@
 
     // Step 2: Create the Chart
     async function createChart() {
-      const csvFile = 'frequency_dB_data_full.csv'; // Path to your CSV file
-      const dataPoints = await loadCSV(csvFile);
+      // Load data for the first line (existing file)
+      const dataPoints1 = await loadCSV('frequency_dB_data_full.csv');
 
+      // Load data for the second line (new file)
+      const dataPoints2 = await loadCSV('Technowant preference curve.csv');
+
+      // Create the chart
       const ctx = document.getElementById('frequencyChart').getContext('2d');
       const chart = new Chart(ctx, {
         type: 'line',
         data: {
-          datasets: [{
-            label: 'Frequency Response',
-            data: dataPoints,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderWidth: 2,
-            pointRadius: 0,
-            tension: 0.4 // Smooth lines
-          }]
+          datasets: [
+            {
+              label: 'Frequency Response',
+              data: dataPoints1,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderWidth: 2,
+              pointRadius: 0,
+              tension: 0.4 // Smooth lines
+            },
+            {
+              label: 'Technowant preference curve', // Use the filename as the label
+              data: dataPoints2,
+              borderColor: 'red',
+              borderDash: [10, 5], // Dashed line style
+              borderWidth: 2,
+              pointRadius: 0,
+              tension: 0.4 // Smooth lines
+            }
+          ]
         },
         options: {
           responsive: true,
