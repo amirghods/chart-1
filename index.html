@@ -38,6 +38,25 @@
       // Load data for the second line (new file)
       const dataPoints2 = await loadCSV('Technowant preference curve.csv');
 
+      // Custom plugin to display logo at the top-right corner
+      const logoPlugin = {
+        id: 'logoPlugin',
+        beforeDraw: (chart) => {
+          const ctx = chart.ctx;
+          const chartArea = chart.chartArea;
+          const image = new Image();
+          image.src = 'https://technowant.com/wp-content/uploads/2024/06/website-logo.png.webp'; // Logo URL
+          
+          image.onload = () => {
+            const imgWidth = 50; // Logo width
+            const imgHeight = 50; // Logo height
+            const xPos = chartArea.right - imgWidth - 10; // 10px padding from the right
+            const yPos = chartArea.top + 10; // 10px padding from the top
+            ctx.drawImage(image, xPos, yPos, imgWidth, imgHeight);
+          };
+        }
+      };
+
       // Create the chart
       const ctx = document.getElementById('frequencyChart').getContext('2d');
       const chart = new Chart(ctx, {
@@ -51,13 +70,13 @@
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               borderWidth: 2,
               pointRadius: 0,
-              tension: 0.4 // Smooth lines
+              tension: 0.4 // Increased tension for smoother curves
             },
             {
               label: 'Technowant preference curve', // Use the filename as the label
               data: dataPoints2,
               borderColor: 'red',
-              borderDash: [10, 6], // Dashed line style
+              borderDash: [10, 5], // Dashed line style
               borderWidth: 3,
               pointRadius: 0,
               tension: 0.4 // Smooth lines
@@ -95,7 +114,8 @@
               }
             }
           }
-        }
+        },
+        plugins: [logoPlugin] // Register the logo plugin
       });
 
       // Step 3: Resize Logic for Responsiveness
