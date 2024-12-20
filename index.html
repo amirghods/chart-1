@@ -39,23 +39,42 @@
       const dataPoints2 = await loadCSV('Technowant preference curve.csv');
 
       // Custom plugin to display logo at the top-right corner
-      const logoPlugin = {
-        id: 'logoPlugin',
-        beforeDraw: (chart) => {
-          const ctx = chart.ctx;
-          const chartArea = chart.chartArea;
-          const image = new Image();
-          image.src = 'https://technowant.com/wp-content/uploads/2024/06/website-logo.png.webp'; // Logo URL
-          
-          image.onload = () => {
-            const imgWidth = 100; // Logo width
-            const imgHeight = 60; // Logo height
-            const xPos = chartArea.right - imgWidth - 10; // 10px padding from the right
-            const yPos = chartArea.top + 10; // 10px padding from the top
-            ctx.drawImage(image, xPos, yPos, imgWidth, imgHeight);
-          };
-        }
-      };
+const logoPlugin = {
+  id: 'logoPlugin',
+  beforeDraw: (chart) => {
+    const ctx = chart.ctx;
+    const chartArea = chart.chartArea;
+
+    const image = new Image();
+    image.src = 'https://technowant.com/wp-content/uploads/2024/06/website-logo.png.webp'; // Logo URL
+
+    // Calculate responsive dimensions based on screen size
+    const viewportWidth = window.innerWidth;
+    let imgWidth, imgHeight;
+
+    if (viewportWidth <= 480) {
+      // Small mobile screens
+      imgWidth = 50;
+      imgHeight = 30;
+    } else if (viewportWidth <= 768) {
+      // Tablets
+      imgWidth = 80;
+      imgHeight = 50;
+    } else {
+      // Desktop and larger screens
+      imgWidth = 100;
+      imgHeight = 60;
+    }
+
+    // Dynamically position the logo
+    const xPos = chartArea.right - imgWidth - 10; // 10px padding from the right
+    const yPos = chartArea.top + 10; // 10px padding from the top
+
+    image.onload = () => {
+      ctx.drawImage(image, xPos, yPos, imgWidth, imgHeight);
+    };
+  }
+};
 
       // Create the chart
       const ctx = document.getElementById('frequencyChart').getContext('2d');
