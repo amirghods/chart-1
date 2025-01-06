@@ -32,7 +32,7 @@
     // Step 2: Create the Chart
     async function createChart() {
       // Load data for the first line (existing file)
-      const dataPoints1 = await loadCSV('Sennheiser HD 450BT.csv');
+      const dataPoints1 = await loadCSV('frequency_dB_data_smooth.csv');
 
       // Load data for the second line (new file)
       const dataPoints2 = await loadCSV('Technowant preference curve.csv');
@@ -82,7 +82,7 @@ const logoPlugin = {
         data: {
           datasets: [
             {
-              label: 'Sennheiser HD 450BT',
+              label: 'test',
               data: dataPoints1,
               borderColor: 'rgba(75, 192, 192, 1)',
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
