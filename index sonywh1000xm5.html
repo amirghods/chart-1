@@ -10,7 +10,6 @@
   <h4 style="text-align: center; font-family: Arial, sans-serif; margin-bottom: 20px; color: #333;">Brüel & Kjær 5128</h4>
   <!-- Chart Container -->
   <div id="chart-container" style="position: relative; width: 100%; max-width: 800px; margin: 0 auto;">
-    <img id="placeholder" src="https://technowant.com/wp-content/uploads/2025/01/Untitled-1.jpg" alt="Loading placeholder">
     <canvas id="frequencyChart"></canvas>
   </div>
 
@@ -32,9 +31,6 @@
 
     // Step 2: Create the Chart
     async function createChart() {
-      const placeholder = document.getElementById("placeholder"); // Get the placeholder image
-
-      try {
       // Load data for the first line (existing file)
       const dataPoints1 = await loadCSV('sony wh-1000xm5.csv');
 
@@ -159,14 +155,7 @@ const logoPlugin = {
       window.addEventListener('resize', resizeChart);
       resizeChart(); // Initial resize call
     }
-// Remove placeholder after the chart is fully created
-        placeholder.style.display = 'none';
-      } catch (error) {
-        console.error("Error creating chart:", error);
-        placeholder.style.display = 'none'; // Hide the placeholder in case of an error
-      }
-    }
-    
+
     // Step 4: Initialize Chart
     createChart();
   </script>
