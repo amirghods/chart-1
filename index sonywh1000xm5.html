@@ -161,10 +161,11 @@ const logoPlugin = {
     }
 // Remove placeholder after the chart is fully created
         placeholder.style.display = 'none';
-            } catch (error) {
+      } catch (error) {
         console.error("Error creating chart:", error);
         placeholder.style.display = 'none'; // Hide the placeholder in case of an error
       }
+    }
     
     // Step 4: Initialize Chart
     createChart();
