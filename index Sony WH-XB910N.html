@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Responsive Frequency Response Chart</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 </head>
 <body>
   <h4 style="text-align: center; font-family: Arial, sans-serif; margin-bottom: 20px; color: #333;">Brüel & Kjær 5128</h4>
@@ -14,66 +13,68 @@
   </div>
 
   <script>
-    // Step 1: Load CSV Data
-    async function loadCSV(file) {
-      const response = await fetch(file);
-      const text = await response.text();
-      const rows = text.split("\n").slice(1); // Skip the header row
+    // Function to dynamically load the Chart.js library
+    const loadChartJS = (callback) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+      script.onload = callback;
+      document.head.appendChild(script);
+    };
 
-      const dataPoints = rows
-        .filter(row => row.trim() !== "") // Exclude empty rows
-        .map(row => {
-          const [frequency, dB] = row.split(",").map(val => parseFloat(val.trim()));
-          return { x: frequency, y: dB };
-        });
-      return dataPoints;
-    }
+    // Initialize the chart after the library is loaded
+    const initializeChart = async () => {
+      // Step 1: Load CSV Data
+      async function loadCSV(file) {
+        const response = await fetch(file);
+        const text = await response.text();
+        const rows = text.split("\n").slice(1); // Skip the header row
 
-    // Step 2: Create the Chart
-    async function createChart() {
-      // Load data for the first line (existing file)
+        const dataPoints = rows
+          .filter(row => row.trim() !== "") // Exclude empty rows
+          .map(row => {
+            const [frequency, dB] = row.split(",").map(val => parseFloat(val.trim()));
+            return { x: frequency, y: dB };
+          });
+        return dataPoints;
+      }
+
+      // Step 2: Create the Chart
       const dataPoints1 = await loadCSV('Sony WH-XB910N.csv');
-
-      // Load data for the second line (new file)
       const dataPoints2 = await loadCSV('Technowant preference curve.csv');
 
-      // Custom plugin to display logo at the top-right corner
-const logoPlugin = {
-  id: 'logoPlugin',
-  beforeDraw: (chart) => {
-    const ctx = chart.ctx;
-    const chartArea = chart.chartArea;
+      // Custom plugin for the logo
+      const logoPlugin = {
+        id: 'logoPlugin',
+        beforeDraw: (chart) => {
+          const ctx = chart.ctx;
+          const chartArea = chart.chartArea;
 
-    const image = new Image();
-    image.src = 'https://technowant.com/wp-content/uploads/2024/06/website-logo.png.webp'; // Logo URL
+          const image = new Image();
+          image.src = 'https://technowant.com/wp-content/uploads/2024/06/website-logo.png.webp';
 
-    // Calculate responsive dimensions based on screen size
-    const viewportWidth = window.innerWidth;
-    let imgWidth, imgHeight;
+          // Calculate responsive dimensions based on screen size
+          const viewportWidth = window.innerWidth;
+          let imgWidth, imgHeight;
 
-    if (viewportWidth <= 480) {
-      // Small mobile screens
-      imgWidth = 50;
-      imgHeight = 30;
-    } else if (viewportWidth <= 768) {
-      // Tablets
-      imgWidth = 80;
-      imgHeight = 50;
-    } else {
-      // Desktop and larger screens
-      imgWidth = 100;
-      imgHeight = 60;
-    }
+          if (viewportWidth <= 480) {
+            imgWidth = 50;
+            imgHeight = 30;
+          } else if (viewportWidth <= 768) {
+            imgWidth = 80;
+            imgHeight = 50;
+          } else {
+            imgWidth = 100;
+            imgHeight = 60;
+          }
 
-    // Dynamically position the logo
-    const xPos = chartArea.right - imgWidth - 10; // 10px padding from the right
-    const yPos = chartArea.top + 10; // 10px padding from the top
+          const xPos = chartArea.right - imgWidth - 10;
+          const yPos = chartArea.top + 10;
 
-    image.onload = () => {
-      ctx.drawImage(image, xPos, yPos, imgWidth, imgHeight);
-    };
-  }
-};
+          image.onload = () => {
+            ctx.drawImage(image, xPos, yPos, imgWidth, imgHeight);
+          };
+        }
+      };
 
       // Create the chart
       const ctx = document.getElementById('frequencyChart').getContext('2d');
@@ -88,22 +89,22 @@ const logoPlugin = {
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               borderWidth: 2,
               pointRadius: 0,
-              tension: 0.9 // Increased tension for smoother curves
+              tension: 0.9
             },
             {
-              label: 'Technowant preference curve', // Use the filename as the label
+              label: 'Technowant preference curve',
               data: dataPoints2,
               borderColor: 'red',
-              borderDash: [10, 5], // Dashed line style
+              borderDash: [10, 5],
               borderWidth: 3,
               pointRadius: 0,
-              tension: 0.4 // Smooth lines
+              tension: 0.4
             }
           ]
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false, // Allow the chart to resize dynamically
+          maintainAspectRatio: false,
           plugins: {
             legend: { display: true }
           },
@@ -133,31 +134,33 @@ const logoPlugin = {
             }
           }
         },
-        plugins: [logoPlugin] // Register the logo plugin
+        plugins: [logoPlugin]
       });
 
-      // Step 3: Resize Logic for Responsiveness
+      // Resize logic for responsiveness
       function resizeChart() {
         const chartContainer = document.getElementById('chart-container');
         const viewportWidth = window.innerWidth;
 
         if (viewportWidth <= 768) {
-          chartContainer.style.height = '400px'; // Adjust for tablets and small screens
+          chartContainer.style.height = '400px';
         } else if (viewportWidth <= 480) {
-          chartContainer.style.height = '300px'; // Adjust for mobile screens
+          chartContainer.style.height = '300px';
         } else {
-          chartContainer.style.height = '500px'; // Default height for larger screens
+          chartContainer.style.height = '500px';
         }
-        chart.resize(); // Resize the chart
+        chart.resize();
       }
 
-      // Listen for window resize events
+      // Listen for resize events
       window.addEventListener('resize', resizeChart);
-      resizeChart(); // Initial resize call
-    }
+      resizeChart();
+    };
 
-    // Step 4: Initialize Chart
-    createChart();
+    // Lazy load the Chart.js library and initialize the chart
+    if (document.querySelector('#frequencyChart')) {
+      loadChartJS(initializeChart);
+    }
   </script>
 </body>
 </html>
